@@ -1,0 +1,23 @@
+[project]
+site_name = "AI in a box"
+site_url = "https://<username>.github.io/<repository>/"
+
+nav = [
+  {"Home" = "index.md"},
+  {"Jetson" = [
+    "jetson/setup.md",
+	"jetson/optimizations.md",
+	"jetson/benchmarks.md",
+	"jetson/hardware.md"
+  ]},
+  {"Server" = [
+    "server/setup.md",
+  ]},
+  {"About" = "about.md"}
+]
+
+[project.theme]
+features = [
+	"navigation.tabs",
+	"navigation.tabs.sticky"
+]
