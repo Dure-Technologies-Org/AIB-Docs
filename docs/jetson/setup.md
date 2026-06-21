@@ -8,6 +8,28 @@ Then update the drivers: `sudo ubuntu-drivers install`
 
 Reboot jetson: `sudo reboot`
 
+## Storage
+
+Rename any mount points `/mnt/ssd` to `/idata`:  
+```bash
+sudo mkdir /idata
+sudo umount /mnt/ssd
+``` 
+
+Make sure that `lsblk` command shows blank under `MOUNTPOINTS` column.
+
+Edit `/etc/fstab` and rename `/mnt/ssd` to `/idata` and then mount `/idata`:  
+```bash
+sudo mount /idata
+```
+
+Clear the system cache and reload:  
+```bash
+sudo systemctl daemon-reload
+sudo mount -a
+```
+
+
 ## SSH
 
 ### Jump host
