@@ -78,6 +78,14 @@ NAME             TYPE SIZE USED PRIO
 
 Don't hesitate to double the swap size in future if OOM for LLMs is an issue. But if a software needs swap all the time, it will be slower since swap is on SSD.
 
+## Power optimization
 
-#TODO: setup docker properly : https://www.jetson-ai-lab.com/tutorials/ssd-docker-setup/
-#TODO: move uv, cache, hf, ollama etc to /idata
+Enable MAX power mode:
+```bash
+sudo nvpmodel -m 0
+```
+
+Enable Jetson clocks: CPU and GPU cores run at maximum frequency:
+```bash
+sudo jetson_clocks
+```

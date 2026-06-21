@@ -1,19 +1,4 @@
-# Template Documentation
+# AI in a box documentation
 
-Welcome to your Zensical documentation site.
+This site is dedicated to setting up, optimizing and benchmarking Jetson and main server for "AI in a box" project.
 
-Use this template to build product docs, engineering handbooks, or project guides.
-
-## Quick start
-
-1. Edit this page in `docs/index.md`.
-2. Add more Markdown files under `docs/`.
-3. Update navigation in `zensical.toml`.
-
-## Suggested sections
-
-- Getting started
-- Installation
-- Usage
-- Troubleshooting
-- FAQ

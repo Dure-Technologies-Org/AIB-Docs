@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://<username>.github.io/<repository>/jetson/setup/">
+        <link rel="canonical" href="https://dure-technologies-org.github.io/AIB-Docs/jetson/setup/">
       
       
         <link rel="prev" href="../..">
@@ -200,22 +200,6 @@
         </a>
       </li>
     
-  
-
-      
-        
-  
-  
-  
-  
-    <li class="md-tabs__item">
-      <a href="../../about/" class="md-tabs__link">
-        
-  
-  About
-
-      </a>
-    </li>
   
 
       
@@ -414,6 +398,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Storage
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-mount-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Project Mount Point
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hf-and-uv-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HF and UV Cache
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#ssh" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
@@ -515,10 +538,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ffmpeg" class="md-nav__link">
+  <a href="#dust" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        ffmpeg
+        dust
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Docker
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ollama
       </span>
     </span>
   </a>
@@ -709,32 +754,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../about/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  About
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -783,6 +802,45 @@
       </span>
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Storage
+      </span>
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-mount-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Project Mount Point
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hf-and-uv-cache" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        HF and UV Cache
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -888,10 +946,32 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ffmpeg" class="md-nav__link">
+  <a href="#dust" class="md-nav__link">
     <span class="md-ellipsis">
       <span class="md-typeset">
-        ffmpeg
+        dust
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Docker
+      </span>
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ollama" class="md-nav__link">
+    <span class="md-ellipsis">
+      <span class="md-typeset">
+        Ollama
       </span>
     </span>
   </a>
@@ -923,41 +1003,68 @@
 <p>Fetch latest upgrades: <code>sudo apt update &amp;&amp; sudo apt upgrade</code>  </p>
 <p>Then update the drivers: <code>sudo ubuntu-drivers install</code>  </p>
 <p>Reboot jetson: <code>sudo reboot</code></p>
+<h2 id="storage">Storage<a class="headerlink" href="#storage" title="Permanent link">&para;</a></h2>
+<h3 id="project-mount-point">Project Mount Point<a class="headerlink" href="#project-mount-point" title="Permanent link">&para;</a></h3>
+<p>Rename any mount points <code>/mnt/ssd</code> to <code>/idata</code>:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>/idata
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo<span class="w"> </span>umount<span class="w"> </span>/mnt/ssd
+</span></code></pre></div></p>
+<p>Make sure that <code>lsblk</code> command shows blank under <code>MOUNTPOINTS</code> column.
+If it doesn't, perform a lazy unmount and check <code>lsblk</code> again:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>sudo<span class="w"> </span>umount<span class="w"> </span>-l<span class="w"> </span>/mnt/ssd
+</span></code></pre></div></p>
+<p>Edit <code>/etc/fstab</code> and rename <code>/mnt/ssd</code> to <code>/idata</code> and then mount <code>/idata</code>:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo<span class="w"> </span>mount<span class="w"> </span>/idata
+</span></code></pre></div></p>
+<p>Clear the system cache and reload:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>mount<span class="w"> </span>-a
+</span></code></pre></div></p>
+<h3 id="hf-and-uv-cache">HF and UV Cache<a class="headerlink" href="#hf-and-uv-cache" title="Permanent link">&para;</a></h3>
+<p>In <code>~/.bashrc</code> add following lines:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nb">export</span><span class="w"> </span><span class="nv">HF_HOME</span><span class="o">=</span>/idata/.cache/huggingface
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nb">export</span><span class="w"> </span><span class="nv">UV_CACHE_DIR</span><span class="o">=</span>/idata/.cache/uv
+</span></code></pre></div>
+Refresh your terminal : <code>source ~/.bashrc</code></p>
+<p>Create home and cache dirs in <code>/idata</code> for HF and UV:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$HF_HOME</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="nv">$UV_CACHE_DIR</span>
+</span></code></pre></div></p>
 <h2 id="ssh">SSH<a class="headerlink" href="#ssh" title="Permanent link">&para;</a></h2>
 <h3 id="jump-host">Jump host<a class="headerlink" href="#jump-host" title="Permanent link">&para;</a></h3>
 <p>We can make the server our jumphost to jetson and save the configurations in our local <code>~/.ssh/config</code>. This will allow us to directly SSH into jetson:</p>
-<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Host<span class="w"> </span>&lt;server_name&gt;
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>Hostname<span class="w"> </span>&lt;server<span class="w"> </span>IP&gt;
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span>User<span class="w"> </span>&lt;server<span class="w"> </span>login<span class="w"> </span>username&gt;
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_rsa
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Host<span class="w"> </span>jetson
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">    </span>HostName<span class="w"> </span>&lt;jetson<span class="w"> </span>IP&gt;
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span>User<span class="w"> </span>&lt;jetson<span class="w"> </span>login<span class="w"> </span>username&gt;
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_rsa
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">    </span>ProxyJump<span class="w"> </span>&lt;server_name&gt;
+<p><div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Host<span class="w"> </span>&lt;server_name&gt;
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">    </span>Hostname<span class="w"> </span>&lt;server<span class="w"> </span>IP&gt;
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span>User<span class="w"> </span>&lt;server<span class="w"> </span>login<span class="w"> </span>username&gt;
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_rsa
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>Host<span class="w"> </span>jetson
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span>HostName<span class="w"> </span>&lt;jetson<span class="w"> </span>IP&gt;
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">    </span>User<span class="w"> </span>&lt;jetson<span class="w"> </span>login<span class="w"> </span>username&gt;
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">    </span>IdentityFile<span class="w"> </span>~/.ssh/id_rsa
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span>ProxyJump<span class="w"> </span>&lt;server_name&gt;
 </span></code></pre></div>
 This assumes that you used <code>id_rsa</code> as your public keys. Since you copied your public keys in <code>authorized_keys</code> on server too, jetson will authenticate you from those keys.</p>
 <p>Save the server public keys to jetson <code>~/.ssh/authorized_keys</code>, run the following command on the server:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ssh-copy-id &lt;jetson login username&gt;@&lt;jetson IP&gt;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ssh-copy-id &lt;jetson login username&gt;@&lt;jetson IP&gt;
 </span></code></pre></div></p>
 <h2 id="network">Network<a class="headerlink" href="#network" title="Permanent link">&para;</a></h2>
 <h3 id="requesting-ip">Requesting IP<a class="headerlink" href="#requesting-ip" title="Permanent link">&para;</a></h3>
 <p>On jetson, request a new IP from the DHCP server after a fresh reboot: 
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>sudo dhclient eno1
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>sudo dhclient eno1
 </span></code></pre></div></p>
 <p>Check Tailscale, whether jetson(yahboom user) has been given a new IP: 
 <img alt="tailscale screenshot" src="../img/tailscale_yahboom.png" /></p>
 <h3 id="autoconnecting-to-ethernet-on-device-restart">Autoconnecting to ethernet on device restart<a class="headerlink" href="#autoconnecting-to-ethernet-on-device-restart" title="Permanent link">&para;</a></h3>
 <p>Check if NetworkManager is running: <code>systemctl status NetworkManager</code>  </p>
 <p>If it is not running:<br />
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>NetworkManager
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>NetworkManager
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>NetworkManager
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>NetworkManager
 </span></code></pre></div></p>
 <p>If it is already running, find the ethernet connection name: <code>nmcli connection show</code>  </p>
 <p>The name will likely be <code>eno1</code>, then:<br />
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>sudo<span class="w"> </span>nmcli<span class="w"> </span>connection<span class="w"> </span>modify<span class="w"> </span><span class="s2">&quot;ethernet_name&quot;</span><span class="w"> </span>connection.autoconnect<span class="w"> </span>yes
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>sudo<span class="w"> </span>nmcli<span class="w"> </span>connection<span class="w"> </span>modify<span class="w"> </span><span class="s2">&quot;ethernet_name&quot;</span><span class="w"> </span>ipv4.method<span class="w"> </span>auto
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>sudo<span class="w"> </span>nmcli<span class="w"> </span>connection<span class="w"> </span>modify<span class="w"> </span><span class="s2">&quot;ethernet_name&quot;</span><span class="w"> </span>connection.autoconnect<span class="w"> </span>yes
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>sudo<span class="w"> </span>nmcli<span class="w"> </span>connection<span class="w"> </span>modify<span class="w"> </span><span class="s2">&quot;ethernet_name&quot;</span><span class="w"> </span>ipv4.method<span class="w"> </span>auto
 </span></code></pre></div></p>
 <h3 id="setting-dns">Setting DNS<a class="headerlink" href="#setting-dns" title="Permanent link">&para;</a></h3>
 <p>In case of jetson does not reach a DNS server:  </p>
@@ -965,8 +1072,8 @@ This assumes that you used <code>id_rsa</code> as your public keys. Since you co
 <li>Sudo open <code>/etc/systemd/resolved.conf</code> in your preferred text editor.  </li>
 <li>Under the <code>[Resolve]</code> section, uncomment and modify the lines:  </li>
 </ol>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nv">DNS</span><span class="o">=</span><span class="m">1</span>.1.1.1<span class="w"> </span><span class="m">8</span>.8.8.8
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">FallbackDNS</span><span class="o">=</span><span class="m">1</span>.0.0.1<span class="w"> </span><span class="m">8</span>.8.4.4
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nv">DNS</span><span class="o">=</span><span class="m">1</span>.1.1.1<span class="w"> </span><span class="m">8</span>.8.8.8
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="nv">FallbackDNS</span><span class="o">=</span><span class="m">1</span>.0.0.1<span class="w"> </span><span class="m">8</span>.8.4.4
 </span></code></pre></div>
 <ol>
 <li>Restart the service: sudo systemctl restart systemd-resolved</li>
@@ -975,11 +1082,74 @@ This assumes that you used <code>id_rsa</code> as your public keys. Since you co
 <h2 id="tools">Tools<a class="headerlink" href="#tools" title="Permanent link">&para;</a></h2>
 <h3 id="jtop">jtop<a class="headerlink" href="#jtop" title="Permanent link">&para;</a></h3>
 <p>Intall using <code>pip</code>: 
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>jetson-stats
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>jtop.service
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>sudo<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>jetson-stats
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>jtop.service
 </span></code></pre></div>
 Jetson might or might not need a reboot after this.</p>
-<h3 id="ffmpeg">ffmpeg<a class="headerlink" href="#ffmpeg" title="Permanent link">&para;</a></h3>
+<h3 id="dust">dust<a class="headerlink" href="#dust" title="Permanent link">&para;</a></h3>
+<p>Convenient <code>du</code> wrapper in rust:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>curl<span class="w"> </span>-sSfL<span class="w"> </span>https://raw.githubusercontent.com/bootandy/dust/refs/heads/master/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+</span></code></pre></div></p>
+<h3 id="docker">Docker<a class="headerlink" href="#docker" title="Permanent link">&para;</a></h3>
+<p>Configure docker to run gpu-accelerated containers from nvidia primarily.
+Assuming docker, nvidia-container is preinstalled and user is added to docker group, run:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>sudo<span class="w"> </span>nvidia-ctk<span class="w"> </span>runtime<span class="w"> </span>configure<span class="w"> </span>--runtime<span class="o">=</span>docker
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</span></code></pre></div></p>
+<p>Add nvidia as the default runtime for docker:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>sudo<span class="w"> </span>vim<span class="w"> </span>/etc/docker/daemon.json
+</span></code></pre></div>
+Edit the file:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="o">{</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">    </span><span class="s2">&quot;runtimes&quot;</span>:<span class="w"> </span><span class="o">{</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">        </span><span class="s2">&quot;nvidia&quot;</span>:<span class="w"> </span><span class="o">{</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">            </span><span class="s2">&quot;path&quot;</span>:<span class="w"> </span><span class="s2">&quot;nvidia-container-runtime&quot;</span>,
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">            </span><span class="s2">&quot;runtimeArgs&quot;</span>:<span class="w"> </span><span class="o">[]</span>
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">    </span><span class="o">}</span>,
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">    </span><span class="s2">&quot;default-runtime&quot;</span>:<span class="w"> </span><span class="s2">&quot;nvidia&quot;</span>
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="o">}</span>
+</span></code></pre></div>
+Now restart:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker
+</span></code></pre></div></p>
+<p>Now move the docker data dir to <code>/idata</code> that has more space:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>sudo<span class="w"> </span>du<span class="w"> </span>-csh<span class="w"> </span>/var/lib/docker/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>sudo<span class="w"> </span>mkdir<span class="w"> </span>/idata/docker<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>sudo<span class="w"> </span>rsync<span class="w"> </span>-axPS<span class="w"> </span>/var/lib/docker/<span class="w"> </span>/idata/docker/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>sudo<span class="w"> </span>du<span class="w"> </span>-csh<span class="w"> </span>/idata/docker/
+</span></code></pre></div>
+<p>We will also move the data dir to <code>/idata</code>:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>docker
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>docker.socket
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>stop<span class="w"> </span>containerd
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>sudo<span class="w"> </span>umount<span class="w"> </span>-f<span class="w"> </span>/var/lib/docker/overlay2/*/*/merged
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>sudo<span class="w"> </span>umount<span class="w"> </span>-f<span class="w"> </span>/var/lib/docker/containers/*/mounts/shm
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>sudo<span class="w"> </span>du<span class="w"> </span>-csh<span class="w"> </span>/var/lib/docker<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>rsync<span class="w"> </span>-axPS<span class="w"> </span>/var/lib/docker/<span class="w"> </span>/idata/docker/<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>du<span class="w"> </span>-csh<span class="w"> </span>/idata/docker/
+</span></code></pre></div></p>
+<p>In case <code>rsync</code> failes and the data that cannot be transferred is very small, ignore those errors by giving flag on the above <code>rsync</code> command: <code>-ignore-errors</code> and rerun the command.</p>
+<p>Edit the <code>sudo vim /etc/docker/daemon.json</code> file again:
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="o">{</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="w">    </span><span class="s2">&quot;runtimes&quot;</span>:<span class="w"> </span><span class="o">{</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a><span class="w">        </span><span class="s2">&quot;nvidia&quot;</span>:<span class="w"> </span><span class="o">{</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="w">            </span><span class="s2">&quot;path&quot;</span>:<span class="w"> </span><span class="s2">&quot;nvidia-container-runtime&quot;</span>,
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a><span class="w">            </span><span class="s2">&quot;runtimeArgs&quot;</span>:<span class="w"> </span><span class="o">[]</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a><span class="w">        </span><span class="o">}</span>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a><span class="w">    </span><span class="o">}</span>,
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a><span class="w">    </span><span class="s2">&quot;default-runtime&quot;</span>:<span class="w"> </span><span class="s2">&quot;nvidia&quot;</span>,
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a><span class="w">    </span><span class="s2">&quot;data-root&quot;</span>:<span class="w"> </span><span class="s2">&quot;/idata/docker&quot;</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a><span class="o">}</span>
+</span></code></pre></div></p>
+<p>Rename old data dir and restart docker daemon:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>sudo<span class="w"> </span>mv<span class="w"> </span>/var/lib/docker<span class="w"> </span>/var/lib/docker.old
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>docker<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>sudo<span class="w"> </span>journalctl<span class="w"> </span>-u<span class="w"> </span>docker
+</span></code></pre></div></p>
+<h3 id="ollama">Ollama<a class="headerlink" href="#ollama" title="Permanent link">&para;</a></h3>
+<p>We will install jetson optimized ollama container:<br />
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>docker<span class="w"> </span>pull<span class="w"> </span>dustynv/ollama:r36.4.3
+</span></code></pre></div></p>
 
 
 

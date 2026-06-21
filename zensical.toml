@@ -13,7 +13,6 @@ nav = [
   {"Server" = [
     "server/setup.md",
   ]},
-  {"About" = "about.md"}
 ]
 
 [project.theme]

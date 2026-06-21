@@ -10,6 +10,8 @@ Reboot jetson: `sudo reboot`
 
 ## Storage
 
+### Project Mount Point
+
 Rename any mount points `/mnt/ssd` to `/idata`:  
 ```bash
 sudo mkdir /idata
@@ -17,6 +19,10 @@ sudo umount /mnt/ssd
 ``` 
 
 Make sure that `lsblk` command shows blank under `MOUNTPOINTS` column.
+If it doesn't, perform a lazy unmount and check `lsblk` again:  
+```bash
+sudo umount -l /mnt/ssd
+```
 
 Edit `/etc/fstab` and rename `/mnt/ssd` to `/idata` and then mount `/idata`:  
 ```bash
@@ -29,6 +35,20 @@ sudo systemctl daemon-reload
 sudo mount -a
 ```
 
+### HF and UV Cache
+
+In `~/.bashrc` add following lines:  
+```bash
+export HF_HOME=/idata/.cache/huggingface
+export UV_CACHE_DIR=/idata/.cache/uv
+```
+Refresh your terminal : `source ~/.bashrc`
+
+Create home and cache dirs in `/idata` for HF and UV:  
+```bash
+mkdir -p $HF_HOME
+mkdir -p $UV_CACHE_DIR
+```
 
 ## SSH
 
@@ -112,9 +132,13 @@ sudo systemctl restart jtop.service
 ```
 Jetson might or might not need a reboot after this.
 
-### ffmpeg
+### dust
 
-TODO
+Convenient `du` wrapper in rust:  
+```bash
+curl -sSfL https://raw.githubusercontent.com/bootandy/dust/refs/heads/master/install.sh | sh
+```
+
 
 ### Docker
 
@@ -167,7 +191,7 @@ sudo du -csh /var/lib/docker && sudo rsync -axPS /var/lib/docker/ /idata/docker/
 
 In case `rsync` failes and the data that cannot be transferred is very small, ignore those errors by giving flag on the above `rsync` command: `-ignore-errors` and rerun the command.
 
-Edit the `sudo vi /etc/docker/daemon.json` file again:
+Edit the `sudo vim /etc/docker/daemon.json` file again:
 ```bash
 {
     "runtimes": {
@@ -191,7 +215,7 @@ sudo journalctl -u docker
 
 ### Ollama
 
-TODO
+We will install jetson optimized ollama container:  
 ```bash
 docker pull dustynv/ollama:r36.4.3
 ```
