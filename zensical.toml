@@ -1,6 +1,6 @@
 [project]
 site_name = "AI in a box"
-site_url = "https://<username>.github.io/<repository>/"
+site_url = "https://dure-technologies-org.github.io/AIB-Docs/"
 
 nav = [
   {"Home" = "index.md"},
