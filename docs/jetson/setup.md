@@ -70,16 +70,7 @@ We will now backup and restore the UAT version of database from main server to j
     ```bash
     sudo -u postgres createdb -T template0 intellicare_uat
     ```
-2. On main servers:
-    ```bash
-    sudo -u postgres pg_dump uat_db_name > uat_db_name.dump
-    rsync -avz /path/to/uat_db_name.dump jetson_user@jetson_hostname:/path/to/jetson/dir/
-    ```
-3. Then on jetson:
-    ```bash
-    sudo -u postgres psql intellicare_uat < uat_db_name.dump
-    ```
-4. Create the dev user and give it access to this db: 
+2. Create the dev user and give it access to this db: 
     ```bash
     CREATE ROLE intellicare_dev_usr
     LOGIN PASSWORD 'your_password_here';
@@ -87,6 +78,16 @@ We will now backup and restore the UAT version of database from main server to j
     ALTER ROLE intellicare_dev_usr CREATEDB;
 
     ALTER DATABASE intellicare_uat OWNER TO intellicare_dev_usr;
+    ```
+
+3. On main servers:
+    ```bash
+    sudo -u postgres pg_dump uat_db_name > uat_db_name.dump
+    rsync -avz /path/to/uat_db_name.dump jetson_user@jetson_hostname:/path/to/jetson/dir/
+    ```
+4. Then on jetson:
+    ```bash
+    sudo -u postgres psql intellicare_uat < uat_db_name.dump
     ```
 
 ## Storage
