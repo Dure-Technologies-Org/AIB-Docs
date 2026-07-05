@@ -1,12 +1,93 @@
 # Setup
 
-## CUDA driver update
+## CUDA related
 
 Fetch latest upgrades: `sudo apt update && sudo apt upgrade`  
 
 Then update the drivers: `sudo ubuntu-drivers install`  
 
 Reboot jetson: `sudo reboot`
+
+for **torchcodec**:
+```bash
+sudo apt-get update
+sudo apt-get install -y libavformat-dev libavcodec-dev libavutil-dev libavdevice-dev libavfilter-dev
+```
+
+install **torchaudio**:
+```bash
+sudo apt-get update
+sudo apt-get install -y ffmpeg libavformat-dev libavcodec-dev libavutil-dev libavdevice-dev libavfilter-dev libswresample-dev libswscale-dev cmake ninja-build
+sudo apt install libnccl2 libnccl-dev
+```
+
+for **torch**:  
+Install `libcudss.so.0` and register its path for LD_LIBRARY_PATH:
+```bash
+sudo apt-get install -y libcudss0-cuda-12
+echo "/usr/lib/aarch64-linux-gnu/libcudss/12" | sudo tee /etc/ld.so.conf.d/libcudss-12.conf 
+sudo ldconfig
+```
+
+## Database
+
+We will install postgres-16 for our work:  
+1. Check ubuntu version: `lsb_release -a`, lets say its `jammy`
+2. Install the repo key: 
+    ```bash
+    sudo apt install curl ca-certificates
+    sudo install -d /usr/share/postgresql-common/pgdg
+    sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
+    ```
+3. Create `/etc/apt/sources.list.d/pgdg.sources`, for `jammy`, download `jammy-pgdg`:
+    ```bash
+    Types: deb deb-src
+    URIs: https://apt.postgresql.org/pub/repos/apt
+    Suites: jammy-pgdg
+    Architectures: arm64
+    Components: main
+    Signed-By: /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc
+    ```
+4. Install postgresSQL 16:
+    ```bash
+    sudo apt update
+    sudo apt install postgresql-16
+    ```
+5. Install postgresSQL 16 extensions:
+    ```bash
+    sudo apt install postgresql-16-pgvector
+    ```
+6. Start and enable services:
+    ```bash
+    sudo systemctl start postgresql
+    sudo systemctl enable postgresql
+    sudo systemctl status postgresql
+    ```
+Optional: In case jetson had older postgreSQL server installed, above steps will only update the psql client and download v16 server packages (check `pg_lsclusters`). To update the server too, perform migration of the cluster by doing: `sudo pg_upgradecluster 14 main`
+
+We will now backup and restore the UAT version of database from main server to jetson:
+1. On jetson, create an empty db: 
+    ```bash
+    sudo -u postgres createdb -T template0 intellicare_uat
+    ```
+2. On main servers:
+    ```bash
+    sudo -u postgres pg_dump uat_db_name > uat_db_name.dump
+    rsync -avz /path/to/uat_db_name.dump jetson_user@jetson_hostname:/path/to/jetson/dir/
+    ```
+3. Then on jetson:
+    ```bash
+    sudo -u postgres psql intellicare_uat < uat_db_name.dump
+    ```
+4. Create the dev user and give it access to this db: 
+    ```bash
+    CREATE ROLE intellicare_dev_usr
+    LOGIN PASSWORD 'your_password_here';
+
+    ALTER ROLE intellicare_dev_usr CREATEDB;
+
+    ALTER DATABASE intellicare_uat OWNER TO intellicare_dev_usr;
+    ```
 
 ## Storage
 
@@ -49,6 +130,55 @@ Create home and cache dirs in `/idata` for HF and UV:
 mkdir -p $HF_HOME
 mkdir -p $UV_CACHE_DIR
 ```
+
+## User and group management
+
+Create a new group:  
+```bash
+sudo groupadd jetson-devs
+```
+
+Create a new user and give sudo rights and add it to the dev group:
+```bash
+sudo adduser teammember-name
+sudo usermod -aG sudo,jetson-devs teammember-name
+```
+You might also want to add the `teammember-name` to other groups like `video`,`i2c` etc. for CUDA, camera etc access.
+
+Change ownership of your project mount folder to this group:  
+```bash
+sudo chown -R :jetson-devs /idata/ai-in-the-box
+```
+
+Set the SGID permission so any new file created by either of you automatically inherits this group ownership:
+```bash
+sudo chmod -R g+rwXs /idata/ai-in-the-box
+```
+
+## Git setup
+
+For a single Jetson, multiple user setup: work in your respective cloned repo folders under `/idata`.
+
+BUT if all still want to work in the same project dir and maintain git: work exclusively/sequentially and not parallely.  
+
+
+Linux usernames are seperate but git repo will be the same that tracks each user seperately. 
+That is why we need to tell git that its safe to have seperate linux users access the same repo:
+```bash
+git config --global --add safe.directory /idata/intellicare_uat
+```
+and add a seperate upstream to your respective fork on github:
+```bash
+git remote add my-fork <YOUR_PERSONAL_FORK_URL>
+```
+DO NOT blindly do `add origin` otherwise the git will overwrite the `ai-in-the-box` url with your fork url. 
+
+Configure local identity:
+```bash
+git config --local user.name "Teammate Name"
+git config --local user.email "teammate@example.com"
+```
+
 
 ## SSH
 
@@ -139,6 +269,21 @@ Convenient `du` wrapper in rust:
 curl -sSfL https://raw.githubusercontent.com/bootandy/dust/refs/heads/master/install.sh | sh
 ```
 
+### fzf
+
+Fuzzy finder for dev productivity:
+```bash
+wget https://github.com/junegunn/fzf/releases/download/v0.73.1/fzf-0.73.1-linux_arm64.tar.gz
+tar -xzf fzf
+sudo mv fzf /usr/local/bin/
+rm fzf-0.73.1-linux_arm64.tar.gz
+sudo chmod a+x /usr/local/bin/fzf
+```
+
+For key-bindings to work, perform shell integration by adding this line to `~/.bashrc`:
+```bash
+eval "$(fzf --bash)"
+```
 
 ### Docker
 
@@ -218,4 +363,12 @@ sudo journalctl -u docker
 We will install jetson optimized ollama container:  
 ```bash
 docker pull dustynv/ollama:r36.4.3
+```
+
+### ffmpeg
+
+```bash
+sudo apt-get install -y \
+  ffmpeg \
+  libavutil-dev libavcodec-dev libavformat-dev libavdevice-dev libavfilter-dev libswresample-dev libswscale-dev
 ```
