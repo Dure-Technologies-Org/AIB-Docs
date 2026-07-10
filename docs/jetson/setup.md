@@ -65,8 +65,8 @@ We will install postgres-16 for our work:
     ```
 Optional: In case jetson had older postgreSQL server installed, above steps will only update the psql client and download v16 server packages (check `pg_lsclusters`). To update the server too, perform migration of the cluster by doing: `sudo pg_upgradecluster 14 main`
 
-We will now backup and restore the UAT version of database from main server to jetson:
-1. On jetson, create an empty db: 
+We will now backup and restore the UAT version of database from main server to jetson:  
+1. On jetson, create an empty db:
     ```bash
     sudo -u postgres createdb -T template0 intellicare_uat
     ```
@@ -88,6 +88,13 @@ We will now backup and restore the UAT version of database from main server to j
 4. Then on jetson:
     ```bash
     sudo -u postgres psql intellicare_uat < uat_db_name.dump
+    ```
+
+Compulsory entries in the database:  
+1. Add super user account with an appropriate password: 
+    ```bash
+    insert into users(username,password_hash,display_name,role,is_active,can_open_settings,can_open_test_dhis2,can_open_admin_portal)
+select 'super_admin', crypt('Password123', gen_salt('bf', 12)), 'Super Admin', 'admin',true,true,true,true;
     ```
 
 ## Storage
@@ -251,6 +258,93 @@ FallbackDNS=1.0.0.1 8.8.4.4
 3. Restart the service: sudo systemctl restart systemd-resolved
 
 Once you've made your changes, test your DNS: `resolvectl status`
+
+### Nginx
+
+Download and install nginx:  
+```bash
+sudo apt update
+sudo apt install nginx -y
+```
+
+Create an nginx service:  
+```bash
+sudo vim /etc/nginx/sites-available/intellicare
+
+server {
+    listen 3000;
+
+    server_name _;
+
+    # Backend API + top-level routers that aren't under /api
+    location ~ ^/(api|analytics|sessions|dhis2-sync|dhis2-configs|field-corrections|system-config|config|forms|asr) {
+        proxy_pass http://localhost:8005;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+
+    # WebSocket
+    location /ws {
+        proxy_pass http://localhost:8005;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+    }
+
+    # Frontend
+    location / {
+        proxy_pass http://localhost:3002;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+}
+sudo ln -s /etc/nginx/sites-available/intellicare /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+
+### Ngrok
+
+Create ngrok service to run always:  
+```bash
+sudo nano /etc/systemd/system/ngrok.service
+
+[Unit]
+Description=ngrok tunnel
+After=network.target
+
+[Service]
+User=jetson
+ExecStart=/usr/local/bin/ngrok http 3002
+Restart=always
+RestartSec=5
+
+# Optional but useful
+Environment=NGROK_AUTHTOKEN=your_token
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Start the services and check its logs:  
+```bash
+sudo systemctl daemon-reexec
+sudo systemctl daemon-reload
+sudo systemctl start ngrok
+sudo systemctl enable --now ngrok
+systemctl status ngrok --no-pager
+```
+After this, update VITE_API_URL in frontend .env based on new grok url:
+```bash
+curl -s http://localhost:4040/api/tunnels | python3 -m json.tool
+```
 
 ## Tools
 
