@@ -1,6 +1,6 @@
 # Benchmarks
 
-Benchmarking AI models in standalone and in-pipeline modes.
+Benchmarking AI models in standalone and in-app (ie. embedded in intellicare) modes.
 
 ## Standalone
 
@@ -76,4 +76,35 @@ eval count:           12 token(s)
 eval duration:        759.126239ms
 eval rate:            15.81 tokens/s
 ```
+
+### Whisperlivekit 
+
+For a ~1min live-audio:  
+
+```bash
+docker run --gpus all \
+  -e NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+  -e HF_HUB_OFFLINE=1 \
+  -v /idata/.cache/huggingface:/root/.cache/huggingface \
+  -v /idata/.cache/wlk:/root/.cache/wlk \
+  -p 8000:8000 \
+  --name wlk -d wlk \
+  --backend whisper --model large-v3-turbo --model_cache_dir /root/.cache/wlk
+```
+
+| Backend | Model | Lang | CPU% | CPU mem | GPU mem | Lag |
+|---|---|---|---|---|---|---|
+| whisper | large-v3-turbo | En | ~50% | 500MB | 5.3GB | ~10 sec |
+| whisper | tiny | En | ~50% | 450MB | 1GB | ~0.5 sec |
+| faster-whisper(cpu) | large-v3-turbo | En | ~200% | 800MB | 1.5GB | ~4 min |
+| faster-whisper(cpu) | tiny | En | ~150% | 350MB | 1.3GB | ~2 sec |
+| faster-whisper(gpu) | large-v3-turbo | En | ~15% | 800MB | 2GB | ~10 sec |
+| faster-whisper(gpu) | tiny | En | ~15% | 350MB | 350MB | ~0.5 sec |
+
+* `Faster-whisper` uses `ctranslate2` which does not have gpu version compatible with jetson   
+ie. aarch64, py3.10, so it falls back to cpu for `ctranslate2` tasks. Unless we build `ctranslate2` from source for jetson.
+* if `backend==whisper`: `--model_cache_dir /root/.cache/wlk`,  
+if `backend==faster-whisper`: `--model_cache_dir /root/.cache/huggingface/hub`
+* `tiny` model, even if with least lag, barely transcribes correctly.
+* Cannot change `faster-whisper` `compute-type` to `int8` or `int8_float16`, with `wlk` cli, but can be set via wlk API.
 
