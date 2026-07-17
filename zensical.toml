@@ -11,6 +11,9 @@ nav = [
 	"jetson/benchmarks.md",
 	"jetson/hardware.md"
   ]},
+  {"Macmini" = [
+    "macmini/setup.md",
+  ]}
   {"Server" = [
     "server/setup.md",
   ]},
