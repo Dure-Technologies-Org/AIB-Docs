@@ -164,3 +164,47 @@ tailscale funnel --bg 3000
 ```
 This will a public url which does not rotate. Use this url for UAT purposes.
 
+Intellicare Infra map would look like this:  
+
+```mermaid
+flowchart TB
+    classDef public fill:#1b3a3a,stroke:#4fd1c5,color:#e6edf0,stroke-width:1.5px;
+    classDef private fill:#2a2140,stroke:#b98cf2,color:#e6edf0,stroke-width:1.5px;
+    classDef build fill:#3a2f1a,stroke:#e0a94f,color:#e6edf0,stroke-width:1.5px;
+    classDef core fill:#1c2226,stroke:#8fa3ab,color:#e6edf0,stroke-width:1px;
+    classDef off fill:#241a1a,stroke:#7a4b4b,color:#9a8484,stroke-width:1px,stroke-dasharray: 4 3;
+    classDef broken fill:#3a1f1f,stroke:#d97b7b,color:#e6edf0,stroke-width:1.5px,stroke-dasharray: 4 3;
+
+    Vite["Vite build<br/>npm run build"]:::build
+    Dist[("frontend/dist<br/>static bundle")]:::core
+    Vite --> Dist
+
+    subgraph PublicNet["Public internet"]
+        RemoteUser(["Remote browser"])
+    end
+
+    subgraph FunnelEdge["Tailscale Funnel edge<br/>103.84.155.x · operated by Tailscale"]
+        FunnelIngress["TLS termination<br/>yahboom-1.tail6b69fd.ts.net"]:::public
+    end
+
+    subgraph Tailnet["Tailscale mesh · 100.x range · private"]
+        AdminUser(["Your other devices<br/>admin · dures-mac-mini · ubuntu-server"])
+    end
+
+    subgraph Jetson["Jetson device (yahboom-1)"]
+        NgrokOff["ngrok<br/>stopped + disabled"]:::off
+        Tailscaled["tailscaled<br/>100.127.79.117"]:::private
+        NginxPort["nginx :3000<br/>site &quot;intellicare&quot;<br/>fixed: 127.0.0.1, not localhost"]:::core
+        NginxDomain["nginx :443<br/>intellicare-jetson.duredemos.com<br/>valid cert, but unreachable from<br/>outside — suspected CGNAT/ISP block"]:::broken
+        Serve["serve :3002<br/>intellicare_frontend.service"]:::core
+        Uvicorn["uvicorn :8005<br/>FastAPI app.main:app<br/>intellicare_backend.service"]:::core
+    end
+
+    RemoteUser -->|"https, stable *.ts.net URL"| FunnelIngress --> Tailscaled --> NginxPort
+    NginxPort -->|" / "| Serve --> Dist
+    NginxPort -->|"/api /ws /asr /sessions ..."| Uvicorn
+
+    RemoteUser -.->|"https — ECONNREFUSED from outside"| NginxDomain
+
+    AdminUser --> Tailscaled -.->|"private, direct"| NginxPort
+```
