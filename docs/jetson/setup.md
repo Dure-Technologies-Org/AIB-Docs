@@ -96,6 +96,7 @@ Compulsory entries in the database:
     insert into users(username,password_hash,display_name,role,is_active,can_open_settings,can_open_test_dhis2,can_open_admin_portal)
 select 'super_admin', crypt('Password123', gen_salt('bf', 12)), 'Super Admin', 'admin',true,true,true,true;
     ```
+2. TODO: Add more entries if starting DB from schema.
 
 ## Storage
 
@@ -185,6 +186,33 @@ Configure local identity:
 ```bash
 git config --local user.name "Teammate Name"
 git config --local user.email "teammate@example.com"
+```
+
+## Publishing assets
+
+jetson needs packages that are built from source such as `ctranslate2`. The wheels to whis our uploaded to git so that `uv lock` works from all machines ie. macmini or other linux machine, as it will resolve this wheel by downloading from our git repo `ai-in-the-box`.  
+
+1. Install `gh` cli [source](https://github.com/cli/cli/blob/trunk/docs/install_linux.md#debian):
+```bash
+(type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y)) \
+	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+	&& out=$(mktemp) && wget -nv -O$out https://cli.github.com/packages/githubcli-archive-keyring.gpg \
+	&& cat $out | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+	&& sudo mkdir -p -m 755 /etc/apt/sources.list.d \
+	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+	&& sudo apt update \
+	&& sudo apt install gh -y
+```
+
+2. login: 
+```bash
+gh auth login
+```
+
+3. To upload wheels: 
+```bash
+/idata/intellicare_uat/backend/scripts/publish_ctranslate2_wheel.sh
 ```
 
 
