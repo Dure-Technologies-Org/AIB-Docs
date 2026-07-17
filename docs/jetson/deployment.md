@@ -150,9 +150,14 @@ server {
 }
 ```
 
+```bash
+sudo ln -s /etc/nginx/sites-available/intellicare /etc/nginx/sites-enabled/
+```
+
 Restart nginx:  
 ```bash
 sudo nginx -t
+sudo systemctl restart nginx
 ```
 
 ## Tailscale

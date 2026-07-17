@@ -94,7 +94,7 @@ Compulsory entries in the database:
 1. Add super user account with an appropriate password: 
     ```bash
     insert into users(username,password_hash,display_name,role,is_active,can_open_settings,can_open_test_dhis2,can_open_admin_portal)
-select 'super_admin', crypt('Password123', gen_salt('bf', 12)), 'Super Admin', 'admin',true,true,true,true;
+    select 'super_admin', crypt('Password123', gen_salt('bf', 12)), 'Super Admin', 'admin',true,true,true,true;
     ```
 2. TODO: Add more entries if starting DB from schema.
 
@@ -295,50 +295,7 @@ sudo apt update
 sudo apt install nginx -y
 ```
 
-Create an nginx service:  
-```bash
-sudo vim /etc/nginx/sites-available/intellicare
-
-server {
-    listen 3000;
-
-    server_name _;
-
-    # Backend API + top-level routers that aren't under /api
-    location ~ ^/(api|analytics|sessions|dhis2-sync|dhis2-configs|field-corrections|system-config|config|forms|asr) {
-        proxy_pass http://localhost:8005;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-
-    # WebSocket
-    location /ws {
-        proxy_pass http://localhost:8005;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-    }
-
-    # Frontend
-    location / {
-        proxy_pass http://localhost:3002;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-    }
-}
-sudo ln -s /etc/nginx/sites-available/intellicare /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl restart nginx
-```
-
-### Ngrok
+### Ngrok (archieved)
 
 Create ngrok service to run always:  
 ```bash
