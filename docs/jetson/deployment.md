@@ -164,7 +164,7 @@ sudo systemctl restart nginx
 
 We use Tailscale funnel to create a public tunnel:  
 ```bash
-sudo tailscale set --operator=jetson
+sudo tailscale set --operator=<linux_username>
 tailscale funnel --bg 3000
 ```
 This will a public url which does not rotate. Use this url for UAT purposes.
