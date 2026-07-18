@@ -13,6 +13,7 @@ nav = [
   ]},
   {"Macmini" = [
     "macmini/setup.md",
+	"macmini/deployment.md",
   ]},
   {"Server" = [
     "server/setup.md",
