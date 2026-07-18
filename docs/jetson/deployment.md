@@ -167,7 +167,7 @@ We use Tailscale funnel to create a public tunnel:
 sudo tailscale set --operator=<linux_username>
 tailscale funnel --bg 3000
 ```
-This will a public url which does not rotate. Use this url for UAT purposes.
+This will a public url which does not rotate, something like `https://yahboom-1.tail6b69fd.ts.net/`. Use this url for UAT purposes.
 
 Intellicare Infra map would look like this:  
 
