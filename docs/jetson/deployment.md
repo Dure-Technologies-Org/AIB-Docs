@@ -108,6 +108,22 @@ sudo systemctl restart intellicare_frontend.service
 
 ## Nginx
 
+Make nginx restart on power failure:  
+```bash
+sudo systemctl edit nginx
+```
+Add following lines:  
+```bash
+[Service]
+Restart=on-failure
+RestartSec=5s
+```
+
+Reload systemd daemon to apply changes:
+```bash
+sudo systemctl daemon-reload
+```
+
 Add configurations for intellicare app:
 ```bash
 sudo vim /etc/nginx/sites-available/intellicare
