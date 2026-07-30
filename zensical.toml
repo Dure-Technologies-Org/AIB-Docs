@@ -13,6 +13,8 @@ nav = [
   ]},
   {"Macmini" = [
     "macmini/setup.md",
+    "macmini/optimizations.md",
+    "jetson/benchmarks.md",
 	"macmini/deployment.md",
   ]},
   {"Server" = [
