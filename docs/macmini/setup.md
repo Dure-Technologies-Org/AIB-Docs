@@ -94,6 +94,15 @@ Change ownership of these root owned caches:
 sudo chown -R openclaw:wheel .cache
 ```
 
+## Network
+
+### Nginx
+
+Download and install nginx:  
+```bash
+brew install nginx
+brew services start nginx
+```
 
 ## Tools
 
@@ -122,4 +131,19 @@ source <(fzf --zsh)
 Resource monitor:  
 ```bash
 brew install btop
+```
+
+### key-movements
+
+If you like linux stype key movements on mac, add following to `~/.zshrc`:  
+```bash
+# Bind Ctrl + Left Arrow / Alt + Left Arrow to move back a word
+bindkey "^[[1;5D" backward-word
+bindkey "^[[1;3D" backward-word
+
+# Bind Ctrl + Right Arrow / Alt + Right Arrow to move forward a word
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;3C" forward-word
+autoload -U select-word-style
+select-word-style bash
 ```
