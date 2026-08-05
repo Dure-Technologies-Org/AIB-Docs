@@ -170,12 +170,30 @@ For a single Jetson, multiple user setup: work in your respective cloned repo fo
 
 BUT if all still want to work in the same project dir and maintain git: work exclusively/sequentially and not parallely.  
 
+Install `gh` for authenticting with Github:  
+```bash
+sudo apt install gh
+gh auth login
+```
+
+Fork `ai-in-the-box` private repository in your Github. 
+
+Clone your forked private repo to `/idata`:  
+```bash
+gh repo clone <YOUR_PERSONAL_FORK_URL>
+```
 
 Linux usernames are seperate but git repo will be the same that tracks each user seperately. 
 That is why we need to tell git that its safe to have seperate linux users access the same repo:
 ```bash
 git config --global --add safe.directory /idata/intellicare_uat
 ```
+
+If you used `sudo` to perform cloning or config udpate, then you might need to reclaim the repo:  
+```bash
+sudo chown -R $(whoami) /idata/ai-in-the-box
+```
+
 and add a seperate upstream to your respective fork on github:
 ```bash
 git remote add my-fork <YOUR_PERSONAL_FORK_URL>
