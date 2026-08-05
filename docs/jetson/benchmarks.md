@@ -25,7 +25,7 @@ eval rate:            13.66 tokens/s
 ### MedGemma (Ollama Docker)
 
 ```bash
-jetson@yahboom:~$ docker run --runtime nvidia -it --rm --network host -v ~/.ollama:/.ollama  -e NVIDIA_DRIVER_CAPABILITIES=compute,utility -e NVIDIA_VISIBLE_DEVICES=all dustynv/ollama:r36.2.0
+jetson@yahboom:~$ docker run --runtime nvidia -it --rm --network host -v ~/.ollama:/.ollama  -e NVIDIA_DRIVER_CAPABILITIES=compute,utility -e NVIDIA_VISIBLE_DEVICES=all dustynv/ollama:r36.4.3
 root@yahboom:/# ollama run --verbose medgemma:4b-it-q4_K_M
 >>> hi
 Hi there! How can I help you today?
