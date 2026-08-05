@@ -99,11 +99,13 @@ sudo systemctl status intellicare_frontend.service --no-pager
 
 Make sure that you have the correct `VITE_API_URL` set in `frontend/.env`.
 
-Rebuild frontend:  
+Rebuild frontend to regenerate `dist` and wipe `node_modules`:  
 ```bash
 cd /idata/intellicare_uat/frontend
+npm ci
 npm run build
 sudo systemctl restart intellicare_frontend.service
+sudo systemctl status intellicare_frontend.service
 ```
 
 ## Nginx
@@ -229,3 +231,27 @@ flowchart TB
 
     AdminUser --> Tailscaled -.->|"private, direct"| NginxPort
 ```
+
+## Ollama
+
+Running ollama as a background docker container that survives reboots:  
+```bash
+systemctl is-enabled docker
+systemctl is-active docker
+
+docker rm -f ollama
+
+mkdir -p /idata/.cache/ollama/models
+
+docker run -d -t \
+  --name ollama \
+  --runtime nvidia \
+  --network host \
+  --restart unless-stopped \
+  -v /idata/.cache/ollama/models:/data/models/ollama/models \
+  -e NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+  -e NVIDIA_VISIBLE_DEVICES=all \
+  dustynv/ollama:0.6.8-r36.4-cu126-22.04
+
+```
+TODO: The models are saved in `/usr/share/ollama/.ollama/models` which is systemd's default model dir for ollama. Maybe in future, this should be moved in docker's volume.
