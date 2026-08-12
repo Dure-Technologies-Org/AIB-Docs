@@ -372,7 +372,7 @@ curl -sSfL https://raw.githubusercontent.com/bootandy/dust/refs/heads/master/ins
 Fuzzy finder for dev productivity:
 ```bash
 wget https://github.com/junegunn/fzf/releases/download/v0.73.1/fzf-0.73.1-linux_arm64.tar.gz
-tar -xzf fzf
+tar -xzf fzf-0.73.1-linux_arm64.tar.gz
 sudo mv fzf /usr/local/bin/
 rm fzf-0.73.1-linux_arm64.tar.gz
 sudo chmod a+x /usr/local/bin/fzf

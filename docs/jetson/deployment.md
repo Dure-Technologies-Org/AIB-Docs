@@ -7,14 +7,14 @@
 
 
 ```bash
-cd /idata/intellicare_uat/backend
+cd /idata/ai-in-the-box/backend
 uv --project backend run uvicorn app.main:app --app-dir backend --host 0.0.0.0 --port 8005 --reload --reload-dir app --reload-exclude "backend/.venv/*"  --ws websockets-sansio
 ```
 
 ### Frontend
 
 ```bash
-cd /idata/intellicare_uat/frontend
+cd /idata/ai-in-the-box/frontend
 npm install
 npm run dev
 ```
@@ -33,7 +33,7 @@ DEPLOYMENT_MODE: Literal["laptop", "jetson", "server"] = "jetson"
 ```
 
 ```bash
-cd /idata/intellicare_uat/backend
+cd /idata/ai-in-the-box/backend
 uv run uvicorn app.main:app --host 0.0.0.0 --port 8005  --ws websockets-sansio
 ```
 
@@ -50,8 +50,8 @@ After=network.target
 [Service]
 User=jetson
 Group=jetson
-WorkingDirectory=/idata/intellicare_uat/backend
-ExecStart=/idata/intellicare_uat/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8005  --ws websockets-sansio
+WorkingDirectory=/idata/ai-in-the-box/backend
+ExecStart=/idata/ai-in-the-box/backend/.venv/bin/uvicorn app.main:app --host 0.0.0.0 --port 8005  --ws websockets-sansio
 
 Restart=always
 RestartSec=5
@@ -62,6 +62,13 @@ WantedBy=multi-user.target
 ```
 
 Similarly for frontend:
+
+Locate serve: 
+```bash
+which serve
+```
+Use its path in `Environment` and `ExecStart` variables in systemd service.
+
 ```bash
 sudo vim /etc/systemd/system/intellicare_frontend.service
 ```
@@ -75,11 +82,11 @@ After=network.target
 Type=simple
 User=jetson
 Group=jetson
-WorkingDirectory=/idata/intellicare_uat/frontend
+WorkingDirectory=/idata/ai-in-the-box/frontend
 
-Environment=PATH=/usr/local/bin:/usr/bin:/bin
+Environment=PATH=/usr/local/bin:/usr/bin:/home/jetson/.nvm/versions/node/v20.19.5/bin
 
-ExecStart=/usr/bin/serve -s dist -l tcp://0.0.0.0:3002
+ExecStart=/home/jetson/.nvm/versions/node/v20.19.5/bin/serve -s dist -l tcp://0.0.0.0:3002
 
 Restart=always
 RestartSec=5
@@ -97,13 +104,13 @@ sudo systemctl status intellicare_backend.service --no-pager
 sudo systemctl status intellicare_frontend.service --no-pager
 ```
 
-Make sure that you have the correct `VITE_API_URL` set in `frontend/.env`.
+Copy `frontend/.env.example` as `frontend/.env` and make sure that you have the correct `VITE_API_URL` set.
 
 Rebuild frontend to regenerate `dist` and wipe `node_modules`:  
 ```bash
-cd /idata/intellicare_uat/frontend
+cd /idata/ai-in-the-box/frontend
 npm ci
-npm run build
+NODE_OPTIONS="--max-old-space-size=6144" npm run build
 sudo systemctl restart intellicare_frontend.service
 sudo systemctl status intellicare_frontend.service
 ```
