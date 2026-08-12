@@ -264,6 +264,13 @@ pg_isready -h 127.0.0.1 -p 5432
 We use Tailscale funnel to create a public tunnel:  
 ```bash
 sudo tailscale set --operator=<mac_username>
+```
+
+This will a public url which does not rotate, something like `https://dures-mac-mini.tail6b69fd.ts.net/`. Use this url for UAT purposes.
+
+Go to Tailscale web console and change the name of the funnel to your liking, eg. `intellicare-edge-hospital.tail6b69fd.ts.net`.
+
+```bash
+tailscale funnel reset
 tailscale funnel --bg 3000
 ```
-This will a public url which does not rotate, something like: `https://dures-mac-mini.tail6b69fd.ts.net/`. Use this url for UAT purposes.

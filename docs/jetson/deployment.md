@@ -190,9 +190,15 @@ sudo systemctl restart nginx
 We use Tailscale funnel to create a public tunnel:  
 ```bash
 sudo tailscale set --operator=<linux_username>
-tailscale funnel --bg 3000
 ```
 This will a public url which does not rotate, something like `https://yahboom-1.tail6b69fd.ts.net/`. Use this url for UAT purposes.
+
+Go to Tailscale web console and change the name of the funnel to your liking, eg. `intellicare-edge-hospital.tail6b69fd.ts.net`.
+
+```bash
+tailscale funnel reset
+tailscale funnel --bg 3000
+```
 
 Intellicare Infra map would look like this:  
 
