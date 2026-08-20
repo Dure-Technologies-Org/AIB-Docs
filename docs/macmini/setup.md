@@ -64,12 +64,19 @@ sudo launchctl enable system/com.tailscale.tailscaled
 sudo launchctl bootstrap system /Library/LaunchDaemons/com.tailscale.tailscaled.plist
 ```
 
+Start tailscale and authenticate:  
 ```bash
 sudo brew services start tailscale
 sudo tailscale up
-sudo tailscale status
 ```
 
+Check status and set SSH flag:  
+```bash
+sudo tailscale status
+sudo tailscale set --ssh
+```
+
+On Admin console of Tailscale, switch of key expiration. 
 
 ## Git setup
 
