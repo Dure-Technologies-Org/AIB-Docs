@@ -11,7 +11,7 @@
 
     2. Add following to the `plist`:  
 
-    ```bash
+    ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -86,7 +86,7 @@
 
 1. Create the plist file as `/Library/LaunchDaemons/com.intellicare.frontend.plist`:
 
-    ```bash
+    ```xml
     <?xml version="1.0" encoding="UTF-8"?>
     <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
     "http://www.apple.com/DTDs/PropertyList-1.0.dtd">

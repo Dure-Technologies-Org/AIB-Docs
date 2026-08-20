@@ -1,5 +1,79 @@
 # Setup
 
+##  First boot-up
+
+1. Connect monitor, keyboard and mouse via bluetooth or usb-c dongle. Connect ethernet cable.  
+
+2. Admin user name: `dure`
+
+3. Download [Tailscale app](https://tailscale.com/download/mac).   
+3.1. Allow it to run in background. Allow it to create VPN.  
+3.2. Login to tailscale account and then rename the device to something appropriate.  
+3.3. In the Tailsclae app settings, allow to add tailscale to PATH so that it can run as cli.
+
+4. Create a new user `intellicare` as `Standard` type.  
+4.1. Name its home folder as the user name ie. `intellicare`.  
+4.2. Make this user as the auto-login user. So that on re-boots this user logs in.
+
+5. Disconnect the prepherals.  
+
+## Tailscale 
+
+Install using brew:  
+```bash
+brew install --formula tailscale
+sudo nano /Library/LaunchDaemons/com.tailscale.tailscaled.plist
+```
+
+Edit the plist as following:  
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://apple.com">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.tailscale.tailscaled</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Applications/Tailscale.app/Contents/MacOS/Tailscale</string>
+        <string>--be-headless</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+</dict>
+</plist>
+```
+
+Set the permissions, load and verify it:  
+```bash
+sudo chown root:wheel /Library/LaunchDaemons/com.tailscale.tailscaled.plist
+sudo chmod 644 /Library/LaunchDaemons/com.tailscale.tailscaled.plist
+sudo launchctl load -w /Library/LaunchDaemons/com.tailscale.tailscaled.plist
+tailscale status
+```
+
+
+## Git setup
+
+(This changes in case CICD is setup )
+
+Install `gh` for authenticting with Github:  
+```bash
+brew install gh
+gh auth login
+gh auth setup-git
+```
+
+Fork `ai-in-the-box` private repository in your Github. 
+
+Clone your forked private repo to `/idata`:  
+```bash
+git clone https://github.com/duretech/ai-in-the-box.git
+```
+
+
 ## Database
 
 We will install postgres-18 for our work:  
@@ -15,24 +89,19 @@ echo 'export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"' >> ~/.zshrc
 source ~/.zshrc
 ```
 
-3. Initialize a data directory (if not already present)
-```cmd
-initdb --locale=en_US.UTF-8 -D /opt/homebrew/var/postgresql@18
-```
-
-4. Start as a background service (auto-starts on login)
+3. Start as a background service (auto-starts on login)
 ```cmd
 brew services start postgresql@18
 ```
 
-5. Verify
+4. Verify
 ```cmd
 psql --version
 pg_dump --version
 psql -d postgres -c "SHOW server_version;"
 ```
 
-6. Extras:
+5. Extras:
 We need vector embedding store
 ```cmd
 brew install pgvector
