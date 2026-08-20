@@ -18,17 +18,19 @@
 5.2. Make this user as the auto-login user. So that on re-boots this user logs in.
 
 6. Under Energy mode settings:  
-6.1. prevent automatic sleeping when display is off.
+6.1. prevent automatic sleeping when display is off.  
 6.2. Restart after power failure
 
-6. Disconnect the prepherals.  
+7. Go to Safari and type: dure-technologies-org.github.io/AIB-Docs/macmini/setup/  
 
 ## Tailscale 
 
-Install using brew:  
+Install using brew. Homebrew installation will take a few minutes and your admin password:  
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install --formula tailscale
+```
+```bash
 sudo nano /Library/LaunchDaemons/com.tailscale.tailscaled.plist
 ```
 
@@ -58,7 +60,14 @@ Set the permissions, load and verify it:
 sudo chown root:wheel /Library/LaunchDaemons/com.tailscale.tailscaled.plist
 sudo chmod 644 /Library/LaunchDaemons/com.tailscale.tailscaled.plist
 sudo launchctl load -w /Library/LaunchDaemons/com.tailscale.tailscaled.plist
-tailscale status
+sudo launchctl enable system/com.tailscale.tailscaled
+sudo launchctl bootstrap system /Library/LaunchDaemons/com.tailscale.tailscaled.plist
+```
+
+```bash
+sudo brew services start tailscale
+sudo tailscale up
+sudo tailscale status
 ```
 
 
