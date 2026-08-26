@@ -6,22 +6,17 @@
 
 2. Admin user name: `dure`
 
-3. Download [Tailscale app](https://tailscale.com/download/mac).   
-3.1. Allow it to run in background. Allow it to create VPN.  
-3.2. Login to tailscale account and then rename the device to something appropriate.  
-3.3. In the Tailsclae app settings, allow to add tailscale to PATH so that it can run as cli.
+3. Skip Apple account creation, apple intelligence, FileVault, and other prompts.
 
-4. Skip Apple account creation, apple intelligence, FileVault, and other prompts.
-
-5. Create a new user `intellicare` as `Standard` type.  
+4. Create a new user `intellicare` as `Standard` type.  
 5.1. Name its home folder as the user name ie. `intellicare`.  
 5.2. Make this user as the auto-login user. So that on re-boots this user logs in.
 
-6. Under Energy mode settings:  
+5. Under Energy mode settings:  
 6.1. prevent automatic sleeping when display is off.  
 6.2. Restart after power failure
 
-7. Go to Safari and type: dure-technologies-org.github.io/AIB-Docs/macmini/setup/  
+6. Go to Safari and type: dure-technologies-org.github.io/AIB-Docs/macmini/setup/  
 
 ## Tailscale 
 
