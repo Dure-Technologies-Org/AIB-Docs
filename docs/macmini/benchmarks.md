@@ -28,3 +28,38 @@ wlk --backend mlx-whisper --model large-v3-turbo --model_cache_dir /root/.cache/
 * Fails to transcribe in foreign languages other than English. 
 * French accent english recording tranascriptions were on par with whisperlivekit.
 * MedASR is trained with lot of clinical jargon words, maybe not in practice with day-to-day doctor-patient interactions.
+
+### vllm-metal vs llama.cpp
+
+* MedGemma-4B-it serving backend evaluation with 16K context
+
+#### Backend comparison (discharge_clinical_triage & other scenarios)
+
+| Scenario | Engine (quant) | TTFT p50 | Total p50 | Decode tok/s | out tok p50 | Result |
+|---|---|---|---|---|---|---|
+| discharge_clinical_triage | vLLM-metal (MLX 4-bit) | 147ms | 120,183ms | 34 | 4,096 | ❌ garbage loop (repetition_score ~1.0) |
+| discharge_clinical_triage | vLLM-metal (MLX 8-bit) | — | 151,900ms | ~27 | 4,096 | ❌ garbage loop (same failure, precision didn't help) |
+| discharge_clinical_triage | **llama.cpp (GGUF Q4_K_M)** | **25ms** | **13,436ms** | **69** | 923 | ✅ valid, natural stop |
+| realtime_visit_summary | vLLM-metal (4-bit) | 122ms | 22,010ms | 37 | 800 | ❌ garbage loop |
+| realtime_visit_summary | **llama.cpp** | **23ms** | **2,223ms** | **70** | 154 | ✅ coherent |
+| chatbot_qa | vLLM-metal (4-bit) | 102ms | 437ms | 42 | 14 | ✅ ok (short prompt) |
+| chatbot_qa | **llama.cpp** | 60ms | **241ms** | **78** | 14 | ✅ ok |
+| opd_extraction | vLLM-metal (4-bit) | 276ms | 31,956ms | 32 | 1,024 | ❌ garbage loop |
+| opd_extraction | **llama.cpp** | **38ms** | **15,447ms** | **66** | 1,024 | ⚠️ valid JSON, but cut mid-object (undersized max_tokens) |
+| config_extraction_medium | vLLM-metal (4-bit) | 276ms | 39,040ms | 31 | 1,200 | ❌ garbage loop |
+| config_extraction_medium | **llama.cpp** | **38ms** | **18,167ms** | **66** | 1,200 | ⚠️ valid JSON, but cut mid-object |
+
+#### Root cause
+- vLLM-metal (both 4-bit and 8-bit MLX quantization of `mlx-community/medgemma-4b-it-*`) produces deterministic repetition-loop garbage on any prompt above ~800 input tokens, across 6 of 7 real production scenarios. Confirmed independent of `temperature` (0 and 0.2) and independent of JSON-mode grammar constraints.
+- vllm-metal's own docs list Gemma 3 as supported, but the only validated example checkpoint is a **QAT** 4-bit build — MedGemma has no QAT variant on Hugging Face (`mlx-community` only ships plain `-4bit/-6bit/-8bit/-bf16`). Untested fine-tune × untested quantization method.
+- **llama.cpp with GGUF `Q4_K_M` fully resolves the degeneration** on the identical prompts, and is ~2x faster on decode with far lower TTFT.
+
+#### Remaining issue: opd_extraction / config_extraction_medium truncation (llama.cpp)
+- Both scenarios still hit `max_tokens` on llama.cpp — but this is **legitimate truncation**, not degeneration: the cut-off content is valid, well-formed JSON, and the field names (`symptom_blurred_vision`, etc.) are real fields from `opd_form_schema.yaml` / `models.py` — the model is genuinely filling the production schema.
+- Tested unbounded (`max_tokens=8000`): **the model still does not terminate naturally** — it hits length cutoff at 7,347 tokens having emitted 111/104 field-objects for a 90-field schema (i.e., re-extracting duplicates). No clean "full" output length exists to size `max_tokens` to.
+- **Bumping max_tokens is not a safe fix on its own**:
+  - Production Ollama/Jetson timeout is hardcoded to 120s (`llm_extractor.py:240`), sized for the current 1024-token default at Jetson's ~12 tok/s. A larger budget (thousands of tokens) would exceed 120s by 5x+.
+  - On timeout, `_call_ollama` silently returns `"{}"` (empty result) rather than erroring — so on real hardware this would silently zero out extractions, not just truncate them.
+  - `extract_json_from_text()` has no partial-JSON recovery — truncation at any token count is a hard parse failure today.
+  - `extract_fields` is invoked from a WebSocket handler (`transcription_ws.py`) — live ambient extraction during consultation; longer generations risk stale/lagging auto-filled fields.
+- **Recommendation**: fix via prompt design (explicit stop-after-N-fields instruction, or split the 90-field schema into smaller per-section extraction calls) rather than a `max_tokens` increase, and if `max_tokens` is raised at all, pair it with a proportional timeout increase and re-test on Jetson-class hardware (not just this Mac).

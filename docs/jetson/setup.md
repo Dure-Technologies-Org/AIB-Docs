@@ -174,13 +174,14 @@ Install `gh` for authenticting with Github:
 ```bash
 sudo apt install gh
 gh auth login
+gh auth setup-git
 ```
 
 Fork `ai-in-the-box` private repository in your Github. 
 
 Clone your forked private repo to `/idata`:  
 ```bash
-gh repo clone <YOUR_PERSONAL_FORK_URL>
+git clone <YOUR_PERSONAL_FORK_URL>
 ```
 
 Linux usernames are seperate but git repo will be the same that tracks each user seperately. 
