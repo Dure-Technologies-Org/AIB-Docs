@@ -1,6 +1,6 @@
 # Benchmarks
 
-Benchmarking AI models in standalone and in-app (ie. embedded in intellicare) modes.
+Benchmarking AI models in standalone and embedded in-app modes.
 
 ## Standalone
 
@@ -29,11 +29,14 @@ wlk --backend mlx-whisper --model large-v3-turbo --model_cache_dir /root/.cache/
 * French accent english recording tranascriptions were on par with whisperlivekit.
 * MedASR is trained with lot of clinical jargon words, maybe not in practice with day-to-day doctor-patient interactions.
 
+
+## Embedded 
+
 ### vllm-metal vs llama.cpp
 
 * MedGemma-4B-it & Qwen3.5-4B serving backend evaluation with 16K context
 
-#### Backend comparison (discharge_clinical_triage & other scenarios)
+#### Backend comparison 
 
 | Scenario | Engine (quant) | TTFT p50 | Total p50 | Decode tok/s | out tok p50 | Result |
 |---|---|---|---|---|---|---|
@@ -70,7 +73,7 @@ wlk --backend mlx-whisper --model large-v3-turbo --model_cache_dir /root/.cache/
   - `extract_fields` is invoked from a WebSocket handler (`transcription_ws.py`) — live ambient extraction during consultation; longer generations risk stale/lagging auto-filled fields.
 - **Recommendation**: fix via prompt design (explicit stop-after-N-fields instruction, or split the 90-field schema into smaller per-section extraction calls) rather than a `max_tokens` increase, and if `max_tokens` is raised at all, pair it with a proportional timeout increase and re-test on Jetson-class hardware (not just this Mac).
 
-#### Qwen3.5-4B-GGUF (llama.cpp) — reasoning-mode requirement
+#### Qwen3.5-4B-GGUF — reasoning-mode requirement
 - Qwen3.5-4B is a thinking/reasoning model. With default settings, it spends the entire `max_tokens` budget on invisible `reasoning_content` and returns **empty** `content` on 6 of 8 scenarios (TTFT up to 75s, total latency up to 98s).
 - Fix: pass `chat_template_kwargs: {"enable_thinking": false}` per-request (no server restart needed — confirmed via llama.cpp's `-rea`/`--reasoning` flag exists as a startup-time alternative, but the per-request override takes precedence). All numbers above are with thinking disabled.
 - Decode speed is flat at ~48-52 tok/s regardless of scenario or thinking mode — thinking doesn't change generation speed, only how many tokens get burned (and how long TTFT is) before anything usable comes back. Notably slower raw decode than MedGemma (66-78 tok/s) on identical hardware/backend.

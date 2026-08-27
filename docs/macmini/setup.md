@@ -73,6 +73,48 @@ sudo tailscale set --ssh
 
 On Admin console of Tailscale, switch of key expiration. 
 
+## Headless-ness check
+
+Perform status checks of some components to make sure Macmini can reboot on power failures and is reachable:  
+NOTE: we are not making macmini use its Wifi as hotspot Access Point (AP), just yet. We leave Wifi on for now.  
+
+```bash
+#!/bin/bash
+
+echo "===== POWER & RESTART SETTINGS ====="
+pmset -g | grep -E "autorestart|sleep|disksleep|displaysleep|womp"
+
+echo ""
+echo "===== NETWORK SERVICE ORDER ====="
+networksetup -listnetworkserviceorder | grep -E "Ethernet|Wi-Fi"
+
+echo ""
+echo "===== ETHERNET (en0) STATUS ====="
+ifconfig en0 | grep -E "status|inet "
+
+echo ""
+echo "===== ETHERNET DHCP CONFIG ====="
+networksetup -getinfo "Ethernet"
+
+echo ""
+echo "===== AUTO-LOGIN STATUS ====="
+defaults read /Library/Preferences/com.apple.loginwindow autoLoginUser 2>/dev/null || echo "Auto-login: not set"
+
+echo ""
+echo "===== FILEVAULT STATUS ====="
+sudo fdesetup status
+```
+
+Now reboot to test if it would actually be available in case of power disconnect, headlessly:  
+```bash
+sudo reboot
+```
+
+To safely switch it off: 
+```bash
+sync && sudo shutdown -h now
+```
+
 ## Git setup
 
 (This changes in case CICD is setup )
